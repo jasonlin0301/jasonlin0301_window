@@ -7,12 +7,12 @@ _Writing in Markdown is not that hard!_
 
 If you're thinking to yourself, ***This is unbelievable***, you'd probably be right.
 ## 第二堂課
-#Header one
-##Header two
-###Header three
-####Header four
-#####Header five
-######Header six
+# Header one
+## Header two
+### Header three
+#### Header four
+##### Header five
+###### Header six
 
 ## _Colombian Symbolism in One_ 
 ### Hundred _Years of Solitude_
@@ -62,14 +62,14 @@ He was baby tuckoo. The moocow came down the road where Betty Byrne lived: she s
 * Chrysanthemum _(Anthemideae Chrysanthemum)_
 * Dahlia _(Coreopsideae Dahlia)_
 
-* Calculus
- * A professor
- * Has no hair
- * Often wears green
-* Castafiore
- * An opera singer
- * Has white hair
- * Is possibly mentally unwell
+>* Calculus
+  * A professor
+  * Has no hair
+  * Often wears green
+>* Castafiore
+  * An opera singer
+  * Has white hair
+  * Is possibly mentally unwell
 
 1. Cut the cheese  
   * Make sure that the cheese is cut into little triangles.  
