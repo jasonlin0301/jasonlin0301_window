@@ -1,5 +1,7 @@
 # jasonlin0301_window
-#11304python應用實戰班
+
+#11304python應用實戰班 
+
 ##上課網址
 https://meet.google.com/wdk-fzdc-swx
 
@@ -11,4 +13,4 @@ https://meet.google.com/wdk-fzdc-swx
 1. 這是python1
 2. 這是python2
 
-[markdown第一次練習](./README.md)
+[markdown第一次練習](./markdown練習/README,md)
