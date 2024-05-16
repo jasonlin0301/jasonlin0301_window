@@ -53,24 +53,24 @@ He was baby tuckoo. The moocow came down the road where Betty Byrne lived: she s
 * Flour 
 * Cheese 
 * Tomatoes
-
+>
 1. Cut the cheese
 2. Slice the tomatoes
 3. Rub the tomatoes in flour
-
+>
 * Azalea _(Ericaceae Rhododendron)_
 * Chrysanthemum _(Anthemideae Chrysanthemum)_
 * Dahlia _(Coreopsideae Dahlia)_
-
->* Calculus
+>
+* Calculus
   * A professor
   * Has no hair
   * Often wears green
->* Castafiore
+* Castafiore
   * An opera singer
   * Has white hair
   * Is possibly mentally unwell
-
+>
 1. Cut the cheese  
   * Make sure that the cheese is cut into little triangles.  
 2. Slice the tomatoes  
