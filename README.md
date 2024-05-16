@@ -13,4 +13,4 @@ https://meet.google.com/wdk-fzdc-swx
 1. 這是python1
 2. 這是python2
 
-[markdown第一次練習](./markdown練習/README.md)
+[markdown第一次練習](https://github.com/jasonlin0301/jasonlin0301_window/tree/main/markdown%E7%B7%B4%E7%BF%92)
