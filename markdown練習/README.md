@@ -32,8 +32,7 @@ Well, do I have [the website for you][another fun place]!
 [a fun place]:www.zombo.com
 [another fun place]:www.stumbleupon.com
 ## 第四堂課
-![Benjamin Bannekat](https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg)
-「A pretty tiger」
+![A pretty tiger](https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg)
 
 ![Black cat][Black]
 
