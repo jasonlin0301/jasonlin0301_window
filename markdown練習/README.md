@@ -55,7 +55,7 @@ He was baby tuckoo. The moocow came down the road where Betty Byrne lived: she s
 * Cheese 
 * Tomatoes
 >  
-1. Cut the cheese
+>1. Cut the cheese
 2. Slice the tomatoes
 3. Rub the tomatoes in flour
 >  
