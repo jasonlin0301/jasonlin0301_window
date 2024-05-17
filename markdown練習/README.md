@@ -21,9 +21,9 @@ If you're thinking to yourself, ***This is unbelievable***, you'd probably be ri
 ## 第三堂課
 Search for it.[Visit GitHub!](www.github.com)
 
-You're [really, really](www.dailykitten.com) going to want to see this.
+You're [**really, really**](www.dailykitten.com) going to want to see this.
   
-The Latest News from [the BBC](www.bbc.com/news)
+#### The Latest News from [the BBC](www.bbc.com/news)
 
 Do you want to [see something fun][a fun place]?
 
