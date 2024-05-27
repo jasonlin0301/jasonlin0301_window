@@ -1,5 +1,5 @@
 # 第二次作業
-[第二次練習](https://github.com/jasonlin0301/jasonlin0301_window/blob/main/downloads/lesson3.ipynb)  
+[第二次練習](https://github.com/jasonlin0301/jasonlin0301_window/blob/main/downloads/lesson2.ipynb)  
 
 將位址使用requests.get 賦值response  
 -response:Response  
