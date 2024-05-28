@@ -5,7 +5,7 @@ class Window(tk.Tk):
     def __init__(self):
         super().__init__()
         self.option_add('*font',('verdana', 12, 'bold'))
-        self.title("lesson2_18")
+        self.title("林宣安_0528作業")
 
         fm = Frame(self)
         Button(fm, text='TOP').pack(side=TOP,expand=YES, anchor=W,fill=X)
