@@ -5,6 +5,3 @@ tkintermapview
 matplotlib
 numpy
 pandas
-
-selenium
-webdriver
