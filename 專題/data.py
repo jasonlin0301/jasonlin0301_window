@@ -1,6 +1,6 @@
 import json
 import requests
-from pydantic import BaseModel, Field, ValidationError, field_validator  # 修改：引入 field_validator
+from pydantic import BaseModel, Field, ValidationError, field_validator
 from typing import List, Dict, Any
 
 def download_json():
@@ -63,6 +63,6 @@ class FilterData:
         if not filtered_data:
             raise ValueError(f"站名為 '{station_name}' 的數據不存在")
        
-if __name__ == "__main__":
-    file_path = "weather_data.json"
-    data = load_data(file_path)
+# if __name__ == "__main__":
+#     file_path = "weather_data.json"
+#     data = load_data(file_path)
