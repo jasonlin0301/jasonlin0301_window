@@ -26,7 +26,7 @@ class _Info(BaseModel):
     rent_bikes:int = Field(alias="available_rent_bikes")
     lat:float = Field(alias="latitude")
     lng:float = Field(alias="longitude")
-    retuen_bikes:int = Field(alias="available_return_bikes")
+    return_bikes:int = Field(alias="available_return_bikes")
 
     model_config = ConfigDict(
         populate_by_name=True,
