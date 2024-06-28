@@ -9,7 +9,7 @@ def heartb(k):
     math.cos(2*k)-2*\
     math.cos(4*k)
 
-speed(12)
+speed(8)
 bgcolor("black")
 
 for i in range(100000):
