@@ -18,6 +18,26 @@
 {{ left | striptags | title }}
 {% endblock%}
 
+{#
+
 {% block right_content%}
-{{ ['list', 'of', 'objects'] | join('|') }}
+<ul>
+    {% for item in ['item1','item2','item3','item4','item5']%}
+    <li>{{ item }}</li>
+    {% endfor %}
+</ul>
+
+{% endblock%}
+
+#}
+{% block right_content%}
+<ul class="nav flex-column">
+
+    {% for item in ['item1','item2','item3','item4','item5']%}
+    <li class="nav-item">
+        <a class="nav-link" href="#">{{item}}</a>
+    </li>
+    {% endfor %}
+
+</ul>
 {% endblock%}
