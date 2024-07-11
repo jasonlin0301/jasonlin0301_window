@@ -2,20 +2,18 @@
 <html lang="zh-tw">
 
 <head>
-{% block head%}
+  {% block head%}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="{{url_for('static',filename='style/bootstrap.min.css')}}" rel="stylesheet">
   <script src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>
   <title>{% block title%}職能發展學院{% endblock%}</title>
-  {% endhead %}
+  {% endblock %}
 </head>
 
 <body>
   <div class="container-md">
     <nav class="navbar navbar-expand-md bg-body-tertiary">
-    <main>
-    </main>
       <div class="container-fluid">
         <a class="navbar-brand" href="{{url_for('index')}}">職能發展學院</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -40,6 +38,17 @@
         </div>
       </div>
     </nav>
+    <main class="container text-center">
+
+      <div class="row">
+        <div class="col-4" style="background-color:beige">
+          Column
+        </div>
+        <div class="col-8" style="background-color:bisque">
+          Column
+        </div>
+      </div>
+    </main>
   </div>
 </body>
 
