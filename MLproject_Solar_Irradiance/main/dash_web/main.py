@@ -121,4 +121,4 @@ def open_calculator(n_clicks):
         pass
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True)(port = 5000, debug = False)
