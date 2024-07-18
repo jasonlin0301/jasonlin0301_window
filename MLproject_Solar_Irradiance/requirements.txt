@@ -6,3 +6,6 @@ matplotlib
 numpy
 pandas
 gunicorn
+dash
+pandas
+Pillow

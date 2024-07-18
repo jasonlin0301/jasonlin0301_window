@@ -1,15 +1,9 @@
 import os
-import pandas as pd
 from PIL import Image
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-
-# 檢查並設置當前工作目錄
-current_dir = os.getcwd()
-if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
-    os.chdir('..')
 
 # 從CSV加載數據
 file_path = os.path.join('temp_solar', 'processed_data_v2.csv')
@@ -121,4 +115,4 @@ def open_calculator(n_clicks):
         pass
 
 if __name__ == '__main__':
-    app.run_server(debug=True)(port = 5000, debug = False)
+    app.run_server(port=5000, debug=False)
