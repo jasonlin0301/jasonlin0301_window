@@ -6,3 +6,7 @@ scikit-learn
 seaborn
 tkinter
 pil
+calculator
+TreeView
+dcc
+dash

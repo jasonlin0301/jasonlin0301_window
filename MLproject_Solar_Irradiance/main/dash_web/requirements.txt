@@ -5,5 +5,5 @@ Pillow
 numpy
 scipy
 calculator
-pd 
 pandas
+TreeView

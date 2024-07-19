@@ -1,84 +1,80 @@
-import dash
-from dash import dcc, html
+import tkinter as tk
+from tkinter import ttk
+from PIL import Image, ImageTk
 import pandas as pd
-from PIL import Image
-import base64
+import os
 import calculator  # 確保已經有這個模組
 
-# 假設 button_texts 是一個列表，包含按鈕的文本和圖像路徑
-button_texts = [
-    ("統計摘要", 'temp_solar/data.png'),
-    ("盒鬚圖", 'temp_solar/boxplot_no_outliers.png'),
-    ("每日平均日照時數", 'temp_solar/line_H.png'),
-    ("平均日照時數常態分佈", 'temp_solar/normaldistribution_H.png'),
-    ("每日平均太陽輻射量", 'temp_solar/line_R.png'),
-    ("平均日射量常態分佈", 'temp_solar/normaldistribution_R.png'),
-    ("熱力圖", 'temp_solar/heatmap.png'),
-    ("線性回歸", 'temp_solar/linear_regression.png'),
-]
+# 檢查並設置當前工作目錄
+current_dir = os.getcwd()
+print("Current Working Directory:", current_dir)
+if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
+    os.chdir('..')
+print("Updated Working Directory:", os.getcwd())
 
-# 創建 Dash 應用
-app = dash.Dash(__name__)
-
-# 加載數據
-file_path = 'temp_solar/processed_data_v2.csv'
+# 從CSV加載數據
+file_path = os.path.join('temp_solar', 'processed_data_v2.csv')
 data = pd.read_csv(file_path)
 
-# 設置顯示圖像的函數
+# 顯示選定圖像的函數
 def display_image(image_path):
-    encoded_image = base64.b64encode(open(image_path, 'rb').read())
-    return f'data:image/png;base64,{encoded_image.decode()}'
+    image = Image.open(image_path)
+    image.thumbnail((800, 600))  # 調整圖像大小以適應窗口
+    img = ImageTk.PhotoImage(image)
+    img_label.config(image=img)
+    img_label.image = img
 
-# 創建主要的 layout
-app.layout = html.Div([
-    html.H1("CSV查看器與圖片"),
-    
-    # 創建 Treeview
-    html.Div([
-        dcc.TreeView(
-            id='tree',
-            columns=[{'name': col, 'id': col} for col in data.columns],
-            data=[{'id': index, 'values': list(row)} for index, row in data.iterrows()]
-        )
-    ], style={'width': '50%', 'display': 'inline-block'}),
-    
-    # 創建按鈕和圖像顯示框
-    html.Div([
-        html.Div([
-            html.Button(text, id=f'button-{idx}', n_clicks=0) for idx, (text, _) in enumerate(button_texts)
-        ]),
-        html.Div(id='image-display')
-    ], style={'width': '50%', 'display': 'inline-block'}),
-    
-    # 添加計算器按鈕
-    html.Button("太陽能系統評估計算", id='calc-button', n_clicks=0),
-    html.Div(id='calculator-output')
-])
+# 創建主窗口
+root = tk.Tk()
+root.title("CSV查看器與圖片")
 
-# 回調函數來更新圖像和計算器部分
-@app.callback(
-    dash.dependencies.Output('image-display', 'children'),
-    [dash.dependencies.Input(f'button-{idx}', 'n_clicks') for idx, _ in enumerate(button_texts)]
-)
-def update_image(n_clicks):
-    ctx = dash.callback_context
-    if not ctx.triggered:
-        button_id = 'button-0'
-    else:
-        button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+# 創建Treeview小部件
+tree = ttk.Treeview(root)
+tree["columns"] = list(data.columns)
+tree["show"] = "headings"
 
-    if button_id.startswith('button-'):
-        idx = int(button_id.split('-')[1])
-        path = button_texts[idx][1]
-        return html.Img(src=display_image(path), style={'width': '80%', 'height': '80%'})
+for col in data.columns:
+    tree.heading(col, text=col)
+    tree.column(col, width=100, anchor='center')
 
-@app.callback(
-    dash.dependencies.Output('calculator-output', 'children'),
-    [dash.dependencies.Input('calc-button', 'n_clicks')]
-)
-def update_calculator(n_clicks):
-    if n_clicks > 0:
-        return calculator.create_ui()
+# 將數據添加到Treeview
+for index, row in data.iterrows():
+    tree.insert("", "end", values=list(row))
 
-if __name__ == '__main__':
-    app.run_server(debug=True)
+tree.pack(side="left", fill="y")
+
+# 創建按鈕和圖像顯示的框架
+frame = ttk.Frame(root)
+frame.pack(side="right", fill="both", expand=True)
+
+# 創建按鈕
+button_texts = [
+    ("統計摘要", os.path.join('temp_solar', 'data.png')),
+    ("盒鬚圖", os.path.join('temp_solar', 'boxplot_no_outliers.png')),
+    ("每日平均日照時數", os.path.join('temp_solar', 'line_H.png')),
+    ("平均日照時數常態分佈", os.path.join('temp_solar', 'normaldistribution_H.png')),
+    ("每日平均太陽輻射量", os.path.join('temp_solar', 'line_R.png')),
+    ("平均日射量常態分佈", os.path.join('temp_solar', 'normaldistribution_R.png')),
+    ("熱力圖", os.path.join('temp_solar', 'heatmap.png')),
+    ("線性回歸", os.path.join('temp_solar', 'linear_regression.png')),
+]
+
+for text, path in button_texts:
+    button = ttk.Button(frame, text=text, command=lambda p=path: display_image(p))
+    button.pack(fill="x")
+
+# 添加執行calculator的按鈕
+def open_calculator():
+    calc_window = tk.Toplevel(root)
+    calc_window.title("太陽能系統評估工具")
+    calculator.create_ui(calc_window)
+
+calc_button = ttk.Button(frame, text="太陽能系統評估計算", command=open_calculator)
+calc_button.pack(fill="x")
+
+# 顯示圖像的標籤
+img_label = ttk.Label(frame)
+img_label.pack(fill="both", expand=True)
+
+# 運行應用程序
+root.mainloop()
