@@ -1,16 +1,22 @@
 import pandas as pd
-import tkinter as tk
-from tkinter import ttk, messagebox
+import dash
+import dash_bootstrap_components as dbc
+from dash import html, dcc, Input, Output, State
+from sqlalchemy import create_engine
 import os
 
-# 檢查並設置當前工作目錄
-current_dir = os.getcwd()
-if os.path.basename(current_dir) != 'MLproject_Solar_Irradiance':
-    os.chdir('..')
+# 連接到 SQLite 資料庫
+DATABASE_URL = "postgresql://tvdi_postgresql_etik_user:4jYKNZqoOCkdoHsQIdHBOiL27yixeBTM@dpg-cqhf92aju9rs738kbi8g-a.singapore-postgres.render.com/tvdi_postgresql_etik_o8g3"  
+engine = create_engine(DATABASE_URL)
 
-# 讀取CSV資料
-file_path = os.path.join('temp_solar', 'annual_averages.csv')
-annual_averages_df = pd.read_csv(file_path)
+# 讀取 SQL 資料
+def load_data():
+    query = "SELECT * FROM dash_web"
+    df = pd.read_sql(query, engine)
+    return df
+
+# 讀取數據
+dash_web_df = load_data()
 
 # 定義太陽能系統相關常數
 WATT_PER_PANEL = 400  # 每塊太陽能板的瓦數
@@ -63,46 +69,68 @@ def suggest_installation(floor_area_tsubo, esh, roof_mount=True):
     suggestion = "建議安裝" if daily_energy > DAILY_ENERGY_THRESHOLD else "不建議安裝"
     return suggestion, daily_energy, installation_cost
 
-# 定義處理按鈕點擊的函數
-def on_submit(region_var, floor_area_var, result_var):
-    region = region_var.get()
-    try:
-        floor_area_tsubo = float(floor_area_var.get())
-    except ValueError:
-        messagebox.showerror("輸入錯誤", "請輸入有效的樓地板面積")
-        return
-    
-    esh = annual_averages_df[annual_averages_df['行政區'] == region]['ESH'].mean()
-    
-    if esh is None or pd.isna(esh):
-        messagebox.showerror("資料錯誤", "無法找到該區域的ESH資料")
-        return
-    
-    suggestion, daily_energy, installation_cost = suggest_installation(floor_area_tsubo, esh)
-    
-    result_var.set(f"{suggestion}\n每日預估發電量: {daily_energy:.2f} 度\n預估安裝成本: {installation_cost:.2f} 新台幣")
+# 初始化 Dash 應用
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-# GUI 應用設定
-def create_ui(window):
-    # 建立視窗部件
-    ttk.Label(window, text="選擇區域:").grid(column=0, row=0, padx=10, pady=10)
-    region_var = tk.StringVar()
-    region_combo = ttk.Combobox(window, textvariable=region_var)
-    region_combo['values'] = annual_averages_df['行政區'].unique().tolist()
-    region_combo.grid(column=1, row=0, padx=10, pady=10)
+# 應用佈局設定
+app.layout = dbc.Container([
+    dbc.Row([
+        dbc.Col([
+            html.H1("太陽能系統計算器"),
+            html.Label("選擇區域:"),
+            dcc.Dropdown(
+                id='region-dropdown',
+                options=[{'label': region, 'value': region} for region in dash_web_df['行政區'].unique()],
+                value=dash_web_df['行政區'].unique()[0]
+            ),
+            html.Label("樓地板面積 (坪):"),
+            dcc.Input(
+                id='floor-area-input',
+                type='number',
+                value=50  # 預設值
+            ),
+            html.Label("是否安裝屋頂架設?"),
+            dcc.RadioItems(
+                id='roof-mount-radio',
+                options=[
+                    {'label': '是', 'value': True},
+                    {'label': '否', 'value': False}
+                ],
+                value=True
+            ),
+            html.Button('提交', id='submit-button', n_clicks=0),
+            html.Div(id='result-output')
+        ], width=6)
+    ])
+], fluid=True)
 
-    ttk.Label(window, text="樓地板面積 (坪):").grid(column=0, row=1, padx=10, pady=10)
-    floor_area_var = tk.StringVar()
-    ttk.Entry(window, textvariable=floor_area_var).grid(column=1, row=1, padx=10, pady=10)
+# 設定回調函數
+@app.callback(
+    Output('result-output', 'children'),
+    Input('submit-button', 'n_clicks'),
+    State('region-dropdown', 'value'),
+    State('floor-area-input', 'value'),
+    State('roof-mount-radio', 'value')
+)
+def update_output(n_clicks, region, floor_area_tsubo, roof_mount):
+    if n_clicks > 0:
+        try:
+            floor_area_tsubo = float(floor_area_tsubo)
+            esh = dash_web_df[dash_web_df['行政區'] == region]['ESH'].mean()
+            
+            if pd.isna(esh):
+                return "資料錯誤: 無法找到該區域的ESH資料"
+            
+            suggestion, daily_energy, installation_cost = suggest_installation(floor_area_tsubo, esh, roof_mount)
+            return (
+                f"{suggestion}\n"
+                f"每日預估發電量: {daily_energy:.2f} 度\n"
+                f"預估安裝成本: {installation_cost:.2f} 新台幣"
+            )
+        except ValueError:
+            return "輸入錯誤: 請輸入有效的樓地板面積"
+    return ""
 
-    result_var = tk.StringVar()
-    ttk.Label(window, textvariable=result_var).grid(column=0, row=3, columnspan=2, padx=10, pady=10)
-
-    ttk.Button(window, text="提交", command=lambda: on_submit(region_var, floor_area_var, result_var)).grid(column=0, row=2, columnspan=2, padx=10, pady=10)
-
-# # 測試函數
-# if __name__ == '__main__':
-#     root = tk.Tk()
-#     root.title("太陽能系統安裝建議")
-#     create_ui(root)
-#     root.mainloop()
+# 運行應用
+if __name__ == '__main__':
+    app.run_server(debug=True)
