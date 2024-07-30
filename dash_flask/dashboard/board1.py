@@ -5,7 +5,7 @@ import plotly.express as px
 app1 = Dash(__name__,requests_pathname_prefix='/dashboard/app1/')
 app1.title = '全球表單'
 
-df = pd.read_csv('https://plotly.github.io/datasets/country_indicators.csv')
+df = pd.read_csv('dash_flask/processed_data_v2.csv')
 
 app1.layout = html.Div([
     html.Div([
