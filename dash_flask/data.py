@@ -10,8 +10,7 @@ def get_areas() -> list[tuple]:
     with conn:
         with conn.cursor() as cursor:
             sql ='''
-            SELECT DISTINCT sarea
-            FROM youbike;
+            select * from dash_web;
             '''
 
             cursor.execute(sql)
@@ -23,13 +22,15 @@ def get_snaOfArea(area:str) -> list[tuple]:
     with conn:
         with conn.cursor() as cursor:
             sql ='''
-            SELECT sna as 站點,total as 總車輛數,rent_bikes as 可借,return_bikes as 可還, mday as 時間,act as 狀態
-            FROM youbike
-            WHERE (updatetime,sna) IN (
-	        SELECT MAX(updatetime),sna
-	        FROM youbike
-	        WHERE sarea = (%s)
-	        GROUP BY sna
+            站名 VARCHAR(20),
+	        平均氣溫 VARCHAR(20),
+	        絕對最高氣溫 VARCHAR(20),
+	        絕對最低氣溫 VARCHAR(40),
+	        總日照時數h VARCHAR(20),
+	        總日射量MJ/m2 VARCHAR(200),
+	        Year VARCHAR(20),
+	        Month VARCHAR(20),
+            行政區 VARCHAR(20),
             )
             '''
 

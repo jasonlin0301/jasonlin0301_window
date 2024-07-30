@@ -35,12 +35,15 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                    <th scope="col">站點</th>
-                    <th scope="col">總車輛數</th>
-                    <th scope="col">可借</th>
-                    <th scope="col">可還</th>
-                    <th scope="col">時間</th>
-                    <th scope="col">狀態</th>
+                    <th scope="col">站名</th>
+                    <th scope="col">平均氣溫</th>
+                    <th scope="col">絕對最高氣溫</th>
+                    <th scope="col">絕對最低氣溫</th>
+                    <th scope="col">總日照時數h</th>
+                    <th scope="col">總日射量MJ/m2</th>
+                    <th scope="col">Year</th>
+                    <th scope="col">Month</th>
+                    <th scope="col">行政區</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,10 +54,11 @@
                             <td>{{sna[2]}}</td>
                             <td>{{sna[3]}}</td>
                             <td>{{sna[4]}}</td>
-                            {% if sna[5]%}
-                                <td>營業中</td>
-                            {% else %}
-                                <td>維修中</td>
+                            <td>{{sna[5]}}</td>
+                            <td>{{sna[6]}}</td>
+                            <td>{{sna[7]}}</td>
+                            <td>{{sna[8]}}</td>
+                            <td>{{sna[9]}}</td>
                             {% endif%}
                         </tr>
                     {% endfor %}
