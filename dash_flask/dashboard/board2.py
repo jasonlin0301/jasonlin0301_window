@@ -24,7 +24,7 @@ app2.layout = html.Div([
 def selected_area(areas_value):
     content = data.get_snaOfArea(area=areas_value)
     df = pd.DataFrame(content)
-    df.columns = ['站點名稱','總數','可借','可還','日期','狀態']
+    df.columns = ['站名','平均氣溫','絕對最高氣溫','絕對最低氣溫','總日照時數h','總日射量MJ/m2','Year','Month','行政區']
     return df.to_dict('records')
 
     
