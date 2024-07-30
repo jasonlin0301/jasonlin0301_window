@@ -3,11 +3,9 @@ import pandas as pd
 import plotly.express as px
 
 app1 = Dash(__name__,requests_pathname_prefix='/dashboard/app1/')
-app1.title = '臺灣太陽能系統評估表單'
+app1.title = '全球表單'
 
-df = pd.read_csv('processed_data_v2.csv')
-
-print(df.columns)
+df = pd.read_csv('https://plotly.github.io/datasets/country_indicators.csv')
 
 app1.layout = html.Div([
     html.Div([
@@ -49,7 +47,7 @@ app1.layout = html.Div([
     )
 
 ])
-
+#如果要連結2個dash,必需要加上app1
 @app1.callback(
     Output('indicator-graphic','figure'),
     Input('xaxis-column','value'),
