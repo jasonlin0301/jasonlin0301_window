@@ -27,7 +27,7 @@ def get_snaOfArea(area:str) -> list[tuple]:
 	        絕對最高氣溫 VARCHAR(20),
 	        絕對最低氣溫 VARCHAR(40),
 	        總日照時數h VARCHAR(20),
-	        總日射量MJ/m2 VARCHAR(200),
+	        總日射量 VARCHAR(200),
 	        Year VARCHAR(20),
 	        Month VARCHAR(20),
             行政區 VARCHAR(20),
