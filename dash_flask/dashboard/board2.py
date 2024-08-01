@@ -4,13 +4,17 @@ import traceback
 from dash import html
 import base64
 
-app1 = dash.Dash(__name__, requests_pathname_prefix='/dashboard/app2/')
-app1.title = '太陽能系統評估'
+# 創建 Dash 應用
+app2 = dash.Dash(__name__, requests_pathname_prefix='/dashboard/app2/')
+app2.title = '太陽能系統評估'
 
 # 顯示選定圖像的函數
 def display_image(image_path, width='80%', height='auto'):
-    encoded_image = base64.b64encode(open(image_path, 'rb').read()).decode('utf-8')
-    return html.Img(src=f'data:image/png;base64,{encoded_image}', style={'width': width, 'height': height})
+    try:
+        encoded_image = base64.b64encode(open(image_path, 'rb').read()).decode('utf-8')
+        return html.Img(src=f'data:image/png;base64,{encoded_image}', style={'width': width, 'height': height})
+    except Exception as e:
+        return html.Div(f"無法顯示圖片: {str(e)}")
 
 # 假設 button_texts 是一個列表，包含按鈕的文本和圖像路徑
 button_texts = [
@@ -24,11 +28,8 @@ button_texts = [
     ("線性回歸", os.path.join('linear_regression.png')),
 ]
 
-# 創建 Dash 應用
-app = dash.Dash(__name__)
-
 # 創建主要的 layout
-app.layout = html.Div([
+app2.layout = html.Div([
     html.Div([
         html.H1("太陽能系統評估計算"),
         html.Div([
@@ -43,7 +44,7 @@ app.layout = html.Div([
 ])
 
 # 回調函數來更新圖像
-@app.callback(
+@app2.callback(
     dash.dependencies.Output('image-display', 'children'),
     [dash.dependencies.Input(f'button-{idx}', 'n_clicks') for idx, _ in enumerate(button_texts)]
 )
@@ -72,6 +73,5 @@ def update_image(*args):
         traceback.print_exc()
         return html.Div(f"圖片顯示出現錯誤: {str(e)}")
 
-
 if __name__ == '__main__':
-    app.run_server(host='127.0.0.1', port=8056, debug=False)
+    app2.run_server(host='127.0.0.1', port=8056, debug=False)
