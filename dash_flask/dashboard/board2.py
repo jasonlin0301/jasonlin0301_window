@@ -14,12 +14,24 @@ def display_image(image_path, width='80%', height='auto'):
         # 打印圖像路徑來檢查是否正確
         print(f"嘗試顯示圖像: {image_path}")
         
-        encoded_image = base64.b64encode(open(image_path, 'rb').read()).decode('utf-8')
-        return html.Img(src=f'data:image/png;base64,{encoded_image}', style={'width': width, 'height': height})
+        # 確保檔案存在
+        if not os.path.isfile(image_path):
+            raise FileNotFoundError(f"檔案不存在: {image_path}")
+
+        with open(image_path, 'rb') as image_file:
+            encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
+            return html.Img(src=f'data:image/png;base64,{encoded_image}', style={'width': width, 'height': height})
     except Exception as e:
+        # 打印錯誤信息到控制台
+        print(f"無法顯示圖片: {str(e)}")
         return html.Div(f"無法顯示圖片: {str(e)}")
 
-# 假設 button_texts 是一個列表，包含按鈕的文本和圖像路徑
+# 確保所有圖片檔案存在
+def check_image_files(button_texts):
+    for _, path in button_texts:
+        if not os.path.isfile(path):
+            print(f"檔案不存在: {path}")
+
 button_texts = [
     ("統計摘要", os.path.join('dash_flask/image/data.png')),
     ("盒鬚圖", os.path.join('dash_flask/image/boxplot_no_outliers.png')),
@@ -30,6 +42,9 @@ button_texts = [
     ("熱力圖", os.path.join('dash_flask/image/heatmap.png')),
     ("線性回歸", os.path.join('dash_flask/image/linear_regression.png')),
 ]
+
+# 檢查圖片檔案是否存在
+check_image_files(button_texts)
 
 # 創建主要的 layout
 app2.layout = html.Div([
@@ -77,4 +92,4 @@ def update_image(*args):
         return html.Div(f"圖片顯示出現錯誤: {str(e)}")
 
 if __name__ == '__main__':
-    app2.run_server(host='127.0.0.1', port=8056, debug=False)
+    app2.run_server(host='127.0.0.1', port=8056, debug=True)
