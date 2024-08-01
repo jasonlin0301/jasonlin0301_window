@@ -1,9 +1,9 @@
-from dash import Dash, html, dcc, Input, Output, callback
+import os
+import dash
 import pandas as pd
 import plotly.express as px
-import os
+from dash import Dash, html, dcc, Input, Output, callback
 from sqlalchemy import create_engine
-import df
 
 # 初始化 Dash 應用
 app1 = Dash(__name__, requests_pathname_prefix='/dashboard/app1/')
@@ -27,17 +27,17 @@ data = pd.read_sql(query, engine)
 engine.dispose()
 
 # 顯示 DataFrame 的欄位名稱
-print("DataFrame columns:", df.columns)
+print("DataFrame columns:", data.columns)
 
 # 去除欄位名稱中的空白字符
-df.columns = df.columns.str.strip()
-print("Cleaned DataFrame columns:", df.columns)
+data.columns = data.columns.str.strip()
+print("Cleaned DataFrame columns:", data.columns)
 
 # 確認必需的欄位是否存在
 required_columns = ['站名', '平均氣溫', '絕對最高氣溫', '絕對最低氣溫',
                     '總日照時數h', '總日射量MJ/ m2', 'Year', 'Month', '行政區']
 for column in required_columns:
-    if column not in df.columns:
+    if column not in data.columns:
         raise ValueError(f"Column '{column}' is missing from the DataFrame")
 
 # 設定應用的佈局
@@ -45,7 +45,7 @@ app1.layout = html.Div([
     html.Div([
         html.Div([
             dcc.Dropdown(
-                options=[{'label': i, 'value': i} for i in df['站名'].unique()],
+                options=[{'label': i, 'value': i} for i in data['站名'].unique()],
                 value='桃園市',  # 根據你的數據選擇一個默認值
                 id='xaxis-column'
             ),
@@ -58,7 +58,7 @@ app1.layout = html.Div([
         ], style={'width': '48%', 'display': 'inline-block'}),
         html.Div([
             dcc.Dropdown(
-                options=[{'label': i, 'value': i} for i in df['站名'].unique()],
+                options=[{'label': i, 'value': i} for i in data['站名'].unique()],
                 value='桃園市',  # 根據你的數據選擇一個默認值
                 id='yaxis-column'
             ),
@@ -72,12 +72,12 @@ app1.layout = html.Div([
     ]),
     dcc.Graph(id='indicator-graphic'),
     dcc.Slider(
-        min=df['Year'].min(),
-        max=df['Year'].max(),
+        min=data['Year'].min(),
+        max=data['Year'].max(),
         step=None,
         id='year--slider',
-        value=df['Year'].max(),
-        marks={str(year): str(year) for year in df['Year'].unique()}
+        value=data['Year'].max(),
+        marks={str(year): str(year) for year in data['Year'].unique()}
     )
 ])
 
@@ -90,7 +90,7 @@ app1.layout = html.Div([
     Input('year--slider', 'value')
 )
 def update_graph(xaxis_column_name, yaxis_column_name, xaxis_type, yaxis_type, year_value):
-    dff = df[df['Year'] == year_value]
+    dff = data[data['Year'] == year_value]
 
     # 檢查選擇的欄位是否在 DataFrame 中
     if xaxis_column_name not in dff['站名'].values:
@@ -126,5 +126,5 @@ def update_graph(xaxis_column_name, yaxis_column_name, xaxis_type, yaxis_type, y
     return fig
 
 # 運行應用
-# if __name__ == '__main__':
-#     app1.run_server(debug=True)
+if __name__ == '__main__':
+    app1.run_server(debug=True)
