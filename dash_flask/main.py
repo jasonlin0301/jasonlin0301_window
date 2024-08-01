@@ -5,7 +5,6 @@ from dashboard.board1 import app1
 from dashboard.board2 import app2
 from dashboard.board3 import app3
 import data
-import dashboard
 
 app = Flask(__name__)
 application = DispatcherMiddleware(app,{
@@ -18,7 +17,7 @@ application = DispatcherMiddleware(app,{
 def index():
     return render_template("board1.py")
 
-@app.route("/dashboard/app2/")
+@app.route("/dashboard/app2")
 def index():
     return render_template("index.html.jinja")
 
