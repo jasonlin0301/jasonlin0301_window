@@ -11,6 +11,9 @@ app2.title = '太陽能系統評估'
 # 顯示選定圖像的函數
 def display_image(image_path, width='80%', height='auto'):
     try:
+        # 打印圖像路徑來檢查是否正確
+        print(f"嘗試顯示圖像: {image_path}")
+        
         encoded_image = base64.b64encode(open(image_path, 'rb').read()).decode('utf-8')
         return html.Img(src=f'data:image/png;base64,{encoded_image}', style={'width': width, 'height': height})
     except Exception as e:
@@ -18,14 +21,14 @@ def display_image(image_path, width='80%', height='auto'):
 
 # 假設 button_texts 是一個列表，包含按鈕的文本和圖像路徑
 button_texts = [
-    ("統計摘要", os.path.join('data.png')),
-    ("盒鬚圖", os.path.join('boxplot_no_outliers.png')),
-    ("每日平均日照時數", os.path.join('line_H.png')),
-    ("平均日照時數常態分佈", os.path.join('normaldistribution_H.png')),
-    ("每日平均太陽輻射量", os.path.join('line_R.png')),
-    ("平均日射量常態分佈", os.path.join('normaldistribution_R.png')),
-    ("熱力圖", os.path.join('heatmap.png')),
-    ("線性回歸", os.path.join('linear_regression.png')),
+    ("統計摘要", os.path.join('dash_flask/image/data.png')),
+    ("盒鬚圖", os.path.join('dash_flask/image/boxplot_no_outliers.png')),
+    ("每日平均日照時數", os.path.join('dash_flask/image/line_H.png')),
+    ("平均日照時數常態分佈", os.path.join('dash_flask/image/normaldistribution_H.png')),
+    ("每日平均太陽輻射量", os.path.join('dash_flask/image/line_R.png')),
+    ("平均日射量常態分佈", os.path.join('dash_flask/image/normaldistribution_R.png')),
+    ("熱力圖", os.path.join('dash_flask/image/heatmap.png')),
+    ("線性回歸", os.path.join('dash_flask/image/linear_regression.png')),
 ]
 
 # 創建主要的 layout

@@ -17,7 +17,7 @@ application = DispatcherMiddleware(app, {
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("base.html.jinja")
 
 @app.route("/dashboard/app2")
 def dashboard_app2():
