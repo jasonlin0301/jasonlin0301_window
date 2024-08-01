@@ -1,19 +1,29 @@
 {% extends 'base.html.jinja' %}
 
-{% block title%}
+{% block title %}
 {{ super() }} - 首頁
 {% endblock %}
 
-{% block head%}
+{% block head %}
 {{ super() }}
-<style type"text/css">
+<style type="text/css">
     body {
-        background-color:white;
+        background-color: white;
+    }
+
+    iframe {
+        width: 100%;
+        height: 800px;
+        /* 設置 iframe 高度，可以根據需要調整 */
+        border: none;
     }
 </style>
 {% endblock %}
 
+{% block main %}
+<h1>日射量資料評估</h1>
 
-{% block main%}
-<h1>太陽能系統數據</h1>
+<!-- 使用 iframe 嵌入 Dash 應用 -->
+<iframe src="{{ url_for('dash_app.index') }}"></iframe>
+
 {% endblock %}

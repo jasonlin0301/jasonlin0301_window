@@ -73,5 +73,5 @@ def update_image(*args):
         return html.Div(f"圖片顯示出現錯誤: {str(e)}")
 
 
-# if __name__ == '__main__':
-#     app.run_server(host='127.0.0.1', port=8056, debug=False)
+if __name__ == '__main__':
+    app.run_server(host='127.0.0.1', port=8056, debug=False)
