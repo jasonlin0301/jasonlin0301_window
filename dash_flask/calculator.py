@@ -5,9 +5,6 @@ from dash import html, dcc, Input, Output, State
 from sqlalchemy import create_engine
 import os
 
-app1 = Dash(__name__, requests_pathname_prefix='/dashboard/app1/')
-app1.title = '太陽能系統計算器'
-
 # 連接到 SQLite 資料庫
 DATABASE_URL = "postgresql://tvdi_postgresql_etik_user:4jYKNZqoOCkdoHsQIdHBOiL27yixeBTM@dpg-cqhf92aju9rs738kbi8g-a.singapore-postgres.render.com/tvdi_postgresql_etik_o8g3"  
 engine = create_engine(DATABASE_URL)
