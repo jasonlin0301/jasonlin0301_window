@@ -3,7 +3,7 @@ import pandas as pd
 import dash as dbc
 import dash
 from sqlalchemy import create_engine
-import 
+
 
 app1 = dash.Dash(__name__, requests_pathname_prefix='/dashboard/app3/')
 app1.title = '太陽能系統計算器'
