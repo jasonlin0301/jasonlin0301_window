@@ -14,7 +14,7 @@ engine = create_engine(DATABASE_URL)
 
 # 讀取 SQL 資料
 def load_data():
-    query = "SELECT * FROM dash_web"
+    query = "SELECT * FROM averages"
     df = pd.read_sql(query, engine)
     return df
 
@@ -22,32 +22,29 @@ def load_data():
 dash_web_df = load_data()
 
 # 定義太陽能系統相關常數
-WATT_PER_PANEL = 400  # 每塊太陽能板的瓦數
-PANEL_PRICE_RANGE = (250, 360)  # 每塊太陽能板的價格區間（美元）
-USD_TO_TWD = 30  # 美元兌新台幣匯率
-DAILY_ENERGY_THRESHOLD = 11  # 每日能量需求閾值（度）
-SYSTEM_EFFICIENCY = 0.8  # 太陽能系統效率
-AREA_PER_PANEL = 1.7  # 每塊太陽能板所需的面積（平方公尺）
+WATT_PER_PANEL = 400
+PANEL_PRICE_RANGE = (250, 360)
+USD_TO_TWD = 30
+DAILY_ENERGY_THRESHOLD = 11
+SYSTEM_EFFICIENCY = 0.8
+AREA_PER_PANEL = 1.7
 
-# 其他設備價格範圍（美元）
 ROOF_MOUNT_PRICE_RANGE = (1000, 3000)
 GROUND_MOUNT_PRICE_RANGE = (2000, 4000)
 STRING_INVERTER_PRICE_RANGE = (1000, 2500)
 MICROINVERTER_PRICE_RANGE = (3000, 5000)
-BATTERY_PRICE_RANGE = (4000, 7000)  # 鋰離子電池
+BATTERY_PRICE_RANGE = (4000, 7000)
 CHARGE_CONTROLLER_PRICE_RANGE = (100, 500)
 DISCONNECT_SWITCH_PRICE_RANGE = (50, 200)
 LABOR_COST_RANGE = (3000, 7000)
 
-# 定義根據樓地板面積計算每日預估發電量的函數
 def calculate_daily_energy(floor_area_tsubo, esh):
     floor_area_m2 = floor_area_tsubo * 3.305785
     num_panels = floor_area_m2 / AREA_PER_PANEL
     total_watt = num_panels * WATT_PER_PANEL
-    daily_energy = total_watt * esh * SYSTEM_EFFICIENCY / 1000  # 轉換成度
+    daily_energy = total_watt * esh * SYSTEM_EFFICIENCY / 1000
     return daily_energy
 
-# 定義根據樓地板面積預估安裝價格的函數
 def estimate_installation_cost(floor_area_tsubo, roof_mount=True):
     floor_area_m2 = floor_area_tsubo * 3.305785
     num_panels = floor_area_m2 / AREA_PER_PANEL
@@ -65,47 +62,62 @@ def estimate_installation_cost(floor_area_tsubo, roof_mount=True):
     
     return total_cost_twd
 
-# 定義建議是否安裝的函數
 def suggest_installation(floor_area_tsubo, esh, roof_mount=True):
     daily_energy = calculate_daily_energy(floor_area_tsubo, esh)
     installation_cost = estimate_installation_cost(floor_area_tsubo, roof_mount)
     suggestion = "建議安裝" if daily_energy > DAILY_ENERGY_THRESHOLD else "不建議安裝"
     return suggestion, daily_energy, installation_cost
 
-# 設定佈局
-app3.layout = dbc.Container([
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+
+app.layout = dbc.Container([
     dbc.Row([
         dbc.Col([
-            html.H1("太陽能系統計算器"),
-            html.Label("選擇區域:"),
+            html.Button('首頁', id='home-button', n_clicks=0, className="btn btn-primary", style={'fontSize': 20}),
+        ], width="auto", className="d-flex align-items-start mb-3")
+    ], className="mb-4"),
+
+    dbc.Row([
+        dbc.Col([
+            html.H1("太陽能系統評估計算", className="text-center mb-4", style={'fontSize': 36}),
+        ], width=12)
+    ], className="justify-content-center"),
+    
+    dbc.Row([
+        dbc.Col([
+            html.Label("選擇區域:", className="form-label", style={'fontSize': 20}),
             dcc.Dropdown(
                 id='region-dropdown',
                 options=[{'label': region, 'value': region} for region in dash_web_df['行政區'].unique()],
-                value=dash_web_df['行政區'].unique()[0]
+                value=dash_web_df['行政區'].unique()[0],
+                style={'width': '100%'}
             ),
-            html.Label("樓地板面積 (坪):"),
+            html.Label("樓地板面積 (坪):", className="form-label mt-3", style={'fontSize': 20}),
             dcc.Input(
                 id='floor-area-input',
                 type='number',
-                value=50  # 預設值
+                value=50,
+                step=1,
+                style={'width': '100%', 'fontSize': 20}
             ),
-            html.Label("是否安裝屋頂架設?"),
+            html.Label("是否安裝屋頂架設?", className="form-label mt-3", style={'fontSize': 20}),
             dcc.RadioItems(
                 id='roof-mount-radio',
                 options=[
                     {'label': '是', 'value': True},
                     {'label': '否', 'value': False}
                 ],
-                value=True
+                value=True,
+                inline=True,
+                style={'fontSize': 20}
             ),
-            html.Button('提交', id='submit-button', n_clicks=0),
-            html.Div(id='result-output')
-        ], width=6)
-    ])
+            html.Button('提交', id='submit-button', n_clicks=0, className="mt-3 btn btn-primary", style={'fontSize': 20}),
+            html.Div(id='result-output', className="mt-4", style={'fontSize': 20})
+        ], width=6, className="text-start")
+    ], className="justify-content-center")
 ], fluid=True)
 
-# 設定回調函數
-@app3.callback(
+@app.callback(
     Output('result-output', 'children'),
     Input('submit-button', 'n_clicks'),
     State('region-dropdown', 'value'),
@@ -116,10 +128,13 @@ def update_output(n_clicks, region, floor_area_tsubo, roof_mount):
     if n_clicks > 0:
         try:
             floor_area_tsubo = float(floor_area_tsubo)
+            if 'ESH' not in dash_web_df.columns:
+                return "資料錯誤: DataFrame 中缺少 'ESH' 列"
+            
             esh = dash_web_df[dash_web_df['行政區'] == region]['ESH'].mean()
             
             if pd.isna(esh):
-                return "資料錯誤: 無法找到該區域的ESH資料"
+                return "資料錯誤: 無法找到該區域的 ESH 資料"
             
             suggestion, daily_energy, installation_cost = suggest_installation(floor_area_tsubo, esh, roof_mount)
             return (
@@ -130,6 +145,14 @@ def update_output(n_clicks, region, floor_area_tsubo, roof_mount):
         except ValueError:
             return "輸入錯誤: 請輸入有效的樓地板面積"
     return ""
+
+@app.callback(
+    Output('home-button', 'n_clicks'),
+    Input('home-button', 'n_clicks')
+)
+def go_home(n_clicks):
+    if n_clicks > 0:
+        return dash.no_update  # 用於觸發導航，根據實際需求修改此行
 
 # 確保 `server` 屬性
 app3.server = app3.server
