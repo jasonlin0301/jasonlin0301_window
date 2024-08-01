@@ -4,12 +4,12 @@ import dash_bootstrap_components as dbc
 import dash
 from sqlalchemy import create_engine
 
+# 初始化 Dash 應用
+app3 = dash.Dash(__name__, requests_pathname_prefix='/dashboard/app3/', external_stylesheets=[dbc.themes.BOOTSTRAP])
+app3.title = '太陽能系統計算器'
 
-app1 = dash.Dash(__name__, requests_pathname_prefix='/dashboard/app3/')
-app1.title = '太陽能系統計算器'
-
-# 連接到 SQLite 資料庫
-DATABASE_URL = "postgresql://tvdi_postgresql_etik_user:4jYKNZqoOCkdoHsQIdHBOiL27yixeBTM@dpg-cqhf92aju9rs738kbi8g-a.singapore-postgres.render.com/tvdi_postgresql_etik_o8g3"  
+# 連接到 PostgreSQL 資料庫
+DATABASE_URL = "postgresql://tvdi_postgresql_etik_user:4jYKNZqoOCkdoHsQIdHBOiL27yixeBTM@dpg-cqhf92aju9rs738kbi8g-a.singapore-postgres.render.com/tvdi_postgresql_etik_o8g3"
 engine = create_engine(DATABASE_URL)
 
 # 讀取 SQL 資料
@@ -72,11 +72,8 @@ def suggest_installation(floor_area_tsubo, esh, roof_mount=True):
     suggestion = "建議安裝" if daily_energy > DAILY_ENERGY_THRESHOLD else "不建議安裝"
     return suggestion, daily_energy, installation_cost
 
-# 初始化 Dash 應用
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
-
-# 應用佈局設定
-app.layout = dbc.Container([
+# 設定佈局
+app3.layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             html.H1("太陽能系統計算器"),
@@ -108,7 +105,7 @@ app.layout = dbc.Container([
 ], fluid=True)
 
 # 設定回調函數
-@app.callback(
+@app3.callback(
     Output('result-output', 'children'),
     Input('submit-button', 'n_clicks'),
     State('region-dropdown', 'value'),
@@ -134,6 +131,5 @@ def update_output(n_clicks, region, floor_area_tsubo, roof_mount):
             return "輸入錯誤: 請輸入有效的樓地板面積"
     return ""
 
-# 運行應用
-if __name__ == '__main__':
-    app.run_server(debug=True)
+# 確保 `server` 屬性
+app3.server = app3.server
