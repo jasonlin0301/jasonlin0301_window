@@ -3,13 +3,15 @@ from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from werkzeug.serving import run_simple
 from dashboard.board1 import app1
 from dashboard.board2 import app2
+from dashboard.board3 import app3
 import data
 import dashboard
 
 app = Flask(__name__)
 application = DispatcherMiddleware(app,{
     "/dashboard/app1":app1.server,
-    "/dashboard/app2":app2.server
+    "/dashboard/app2":app2.server,
+    "/dashboard/app3":app3.server,
 })
 
 @app.route("/")

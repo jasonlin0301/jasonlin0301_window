@@ -1,11 +1,12 @@
+from dash import html, dcc, Input, Output, State
 import pandas as pd
 import dash
 import dash_bootstrap_components as dbc
-from dash import html, dcc, Input, Output, State
+
 from sqlalchemy import create_engine
 import os
 
-app1 = Dash(__name__, requests_pathname_prefix='/dashboard/app1/')
+app1 = dash.Dash(__name__, requests_pathname_prefix='/dashboard/app3/')
 app1.title = '太陽能系統計算器'
 
 # 連接到 SQLite 資料庫
@@ -135,5 +136,5 @@ def update_output(n_clicks, region, floor_area_tsubo, roof_mount):
     return ""
 
 # 運行應用
-if __name__ == '__main__':
-    app.run_server(debug=True)
+# if __name__ == '__main__':
+#     app.run_server(debug=True)

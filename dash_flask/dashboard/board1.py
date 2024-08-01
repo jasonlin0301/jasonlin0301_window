@@ -1,13 +1,30 @@
 from dash import Dash, html, dcc, Input, Output, callback
 import pandas as pd
 import plotly.express as px
+import os
+from sqlalchemy import create_engine
+import df
 
 # 初始化 Dash 應用
 app1 = Dash(__name__, requests_pathname_prefix='/dashboard/app1/')
 app1.title = '臺灣太陽能系統評估表單'
 
-# 讀取 CSV 文件
-df = pd.read_csv('processed_data_v2.csv')
+# 確定目錄設置正確，使用相對路徑設置文件路徑
+current_dir = os.getcwd()
+target_dir = os.path.join(current_dir, 'dash_web')
+
+# 設置資料庫連線
+db_url = 'postgresql://tvdi_postgresql_etik_user:4jYKNZqoOCkdoHsQIdHBOiL27yixeBTM@dpg-cqhf92aju9rs738kbi8g-a.singapore-postgres.render.com/tvdi_postgresql_etik_o8g3'
+engine = create_engine(db_url)
+
+# 假設您的表格名稱是 dash_web，以及要選取的欄位
+query = "SELECT * FROM dash_web"
+
+# 使用 Pandas 讀取資料
+data = pd.read_sql(query, engine)
+
+# 關閉資料庫連線
+engine.dispose()
 
 # 顯示 DataFrame 的欄位名稱
 print("DataFrame columns:", df.columns)
@@ -29,7 +46,7 @@ app1.layout = html.Div([
         html.Div([
             dcc.Dropdown(
                 options=[{'label': i, 'value': i} for i in df['站名'].unique()],
-                value='茶改場',  # 根據你的數據選擇一個默認值
+                value='桃園市',  # 根據你的數據選擇一個默認值
                 id='xaxis-column'
             ),
             dcc.RadioItems(
@@ -42,7 +59,7 @@ app1.layout = html.Div([
         html.Div([
             dcc.Dropdown(
                 options=[{'label': i, 'value': i} for i in df['站名'].unique()],
-                value='茶改場',  # 根據你的數據選擇一個默認值
+                value='桃園市',  # 根據你的數據選擇一個默認值
                 id='yaxis-column'
             ),
             dcc.RadioItems(
@@ -109,5 +126,5 @@ def update_graph(xaxis_column_name, yaxis_column_name, xaxis_type, yaxis_type, y
     return fig
 
 # 運行應用
-if __name__ == '__main__':
-    app1.run_server(debug=True)
+# if __name__ == '__main__':
+#     app1.run_server(debug=True)
