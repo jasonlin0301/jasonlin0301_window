@@ -1,6 +1,6 @@
 from dash import html, dcc, Input, Output, State
 import pandas as pd
-import dash as dbc
+import dash_bootstrap_components as dbc
 import dash
 from sqlalchemy import create_engine
 
