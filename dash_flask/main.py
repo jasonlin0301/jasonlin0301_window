@@ -1,40 +1,33 @@
-from flask import Flask,render_template,request
+from flask import Flask, render_template
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from werkzeug.serving import run_simple
 from dashboard.board1 import app1
 from dashboard.board2 import app2
 from dashboard.board3 import app3
-import data
 
 app = Flask(__name__)
-application = DispatcherMiddleware(app,{
-    "/dashboard/app1":app1.server,
-    "/dashboard/app2":app2.server,
-    "/dashboard/app3":app3.server,
+
+# 使用 DispatcherMiddleware 將多個 Dash 應用與 Flask 應用結合
+application = DispatcherMiddleware(app, {
+    "/dashboard/app1": app1.server,
+    "/dashboard/app2": app2.server,
+    "/dashboard/app3": app3.server,
 })
 
 @app.route("/")
 def index():
-    return render_template("board1.py")
+    # 渲染靜態首頁
+    return render_template("index.html")
 
 @app.route("/dashboard/app2")
-def index():
+def dashboard_app2():
+    # 渲染另外一個靜態頁面，如果需要的話
     return render_template("index.html.jinja")
 
-@app.route("/index1")
-def index1():
-    selected_area = request.args.get('area')
-    areas = [tup[0] for tup in data.get_areas()]
-    selected_area = ' ' if selected_area is None else selected_area
-    detail_snaes = data.get_snaOfArea(area=selected_area)
-    
-    #areas->所有行政區 
-    #show_area -> 要顯示的行政區
-    #detail_snaes -> 該行政區所有站點資訊   
-    return render_template('index1.html.jinja',areas=areas,show_area=selected_area,detail_snaes=detail_snaes)    
-    
-    
-
+@app.route("/dashboard/app3")
+def dashboard_app2():
+    # 渲染另外一個靜態頁面，如果需要的話
+    return render_template("index1.html.jinja")
 
 if __name__ == "__main__":
-    run_simple("localhost", 8080, application,use_debugger=True,use_reloader=True)
+    run_simple("localhost", 8080, application, use_debugger=True, use_reloader=True)
