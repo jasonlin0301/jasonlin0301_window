@@ -4,6 +4,10 @@ import traceback
 from dash import html
 import base64
 
+# 檢查並設置當前工作目錄
+current_dir = os.getcwd()
+target_dir = os.path.join(current_dir, 'dash_flask')
+
 # 創建 Dash 應用
 app2 = dash.Dash(__name__, requests_pathname_prefix='/dashboard/app2/')
 app2.title = '太陽能系統評估'
@@ -33,14 +37,14 @@ def check_image_files(button_texts):
             print(f"檔案不存在: {path}")
 
 button_texts = [
-    ("統計摘要", os.path.join('dash_flask/image/data.png')),
-    ("盒鬚圖", os.path.join('dash_flask/image/boxplot_no_outliers.png')),
-    ("每日平均日照時數", os.path.join('dash_flask/image/line_H.png')),
-    ("平均日照時數常態分佈", os.path.join('dash_flask/image/normaldistribution_H.png')),
-    ("每日平均太陽輻射量", os.path.join('dash_flask/image/line_R.png')),
-    ("平均日射量常態分佈", os.path.join('dash_flask/image/normaldistribution_R.png')),
-    ("熱力圖", os.path.join('dash_flask/image/heatmap.png')),
-    ("線性回歸", os.path.join('dash_flask/image/linear_regression.png')),
+    ("統計摘要", os.path.join('image','data.png')),
+    ("盒鬚圖", os.path.join('image','boxplot_no_outliers.png')),
+    ("每日平均日照時數", os.path.join('image','line_H.png')),
+    ("平均日照時數常態分佈", os.path.join('image','normaldistribution_H.png')),
+    ("每日平均太陽輻射量", os.path.join('image','line_R.png')),
+    ("平均日射量常態分佈", os.path.join('image','normaldistribution_R.png')),
+    ("熱力圖", os.path.join('image','heatmap.png')),
+    ("線性回歸", os.path.join('image','linear_regression.png')),
 ]
 
 # 檢查圖片檔案是否存在

@@ -11,7 +11,7 @@ app1.title = '臺灣太陽能系統評估表單'
 
 # 確定目錄設置正確，使用相對路徑設置文件路徑
 current_dir = os.getcwd()
-target_dir = os.path.join(current_dir, 'dash_web')
+target_dir = os.path.join(current_dir, 'dash_flask')
 
 # 設置資料庫連線
 db_url = 'postgresql://tvdi_postgresql_etik_user:4jYKNZqoOCkdoHsQIdHBOiL27yixeBTM@dpg-cqhf92aju9rs738kbi8g-a.singapore-postgres.render.com/tvdi_postgresql_etik_o8g3'
@@ -33,98 +33,22 @@ print("DataFrame columns:", data.columns)
 data.columns = data.columns.str.strip()
 print("Cleaned DataFrame columns:", data.columns)
 
-# 確認必需的欄位是否存在
-required_columns = ['站名', '平均氣溫', '絕對最高氣溫', '絕對最低氣溫',
-                    '總日照時數h', '總日射量MJ/ m2', 'Year', 'Month', '行政區']
-for column in required_columns:
-    if column not in data.columns:
-        raise ValueError(f"Column '{column}' is missing from the DataFrame")
-
-# 設定應用的佈局
 app1.layout = html.Div([
-    html.Div([
-        html.Div([
-            dcc.Dropdown(
-                options=[{'label': i, 'value': i} for i in data['站名'].unique()],
-                value='桃園市',  # 根據你的數據選擇一個默認值
-                id='xaxis-column'
-            ),
-            dcc.RadioItems(
-                options=[{'label': 'Linear', 'value': 'Linear'}, {'label': 'Log', 'value': 'Log'}],
-                value='Linear',
-                id='xaxis-type',
-                inline=True
-            )
-        ], style={'width': '48%', 'display': 'inline-block'}),
-        html.Div([
-            dcc.Dropdown(
-                options=[{'label': i, 'value': i} for i in data['站名'].unique()],
-                value='桃園市',  # 根據你的數據選擇一個默認值
-                id='yaxis-column'
-            ),
-            dcc.RadioItems(
-                options=[{'label': 'Linear', 'value': 'Linear'}, {'label': 'Log', 'value': 'Log'}],
-                value='Linear',
-                id='yaxis-type',
-                inline=True
-            )
-        ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'})
-    ]),
-    dcc.Graph(id='indicator-graphic'),
-    dcc.Slider(
-        min=data['Year'].min(),
-        max=data['Year'].max(),
-        step=None,
-        id='year--slider',
-        value=data['Year'].max(),
-        marks={str(year): str(year) for year in data['Year'].unique()}
-    )
+    dcc.Dropdown(
+       options = year,
+       value = year[0],
+       id='year'
+    ),
+    html.Hr(),
+    dash_table.DataTable(id='sites_table')
 ])
-
-@app1.callback(
-    Output('indicator-graphic', 'figure'),
-    Input('xaxis-column', 'value'),
-    Input('yaxis-column', 'value'),
-    Input('xaxis-type', 'value'),
-    Input('yaxis-type', 'value'),
-    Input('year--slider', 'value')
-)
-def update_graph(xaxis_column_name, yaxis_column_name, xaxis_type, yaxis_type, year_value):
-    dff = data[data['Year'] == year_value]
-
-    # 檢查選擇的欄位是否在 DataFrame 中
-    if xaxis_column_name not in dff['站名'].values:
-        raise ValueError(f"'{xaxis_column_name}' is not a valid indicator name for x-axis")
-    if yaxis_column_name not in dff['站名'].values:
-        raise ValueError(f"'{yaxis_column_name}' is not a valid indicator name for y-axis")
-
-    xValue = dff[dff['站名'] == xaxis_column_name]['總日照時數h']
-    yValue = dff[dff['站名'] == yaxis_column_name]['總日射量MJ/ m2']
-    hoverValue = dff[dff['站名'] == yaxis_column_name]['行政區']
-    
-    fig = px.scatter(
-        x=xValue,
-        y=yValue,
-        hover_name=hoverValue
-    )
-    
-    fig.update_layout(
-        margin={'l': 40, 'b': 40, 't': 10, 'r': 0},
-        hovermode='closest'
-    )
-    
-    fig.update_xaxes(
-        title=xaxis_column_name,
-        type='linear' if xaxis_type == 'Linear' else 'log'
-    )
-    
-    fig.update_yaxes(
-        title=yaxis_column_name,
-        type='linear' if yaxis_type == 'Linear' else 'log'
-    )
-    
-    return fig
-
-# 運行應用
-if __name__ == '__main__':
-    app1.run_server(debug=True)
+# #如果要連結2個dash,必需要加上app1
+# @app1.callback(
+#     Output('sites_table','data'),
+#     Input('year','value')
+# )
+# def selected_area(year_value):
+#     content = data.get_snaOfArea(area=year_value)
+#     df = pd.DataFrame(content)
+#     df.columns = ['站點名稱','總數','可借','可還','日期','狀態']
+#     return df.to_dict('records')
