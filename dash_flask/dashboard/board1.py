@@ -21,7 +21,7 @@ engine.dispose()
 
 # 設置 Dash 應用的佈局
 app1.layout = html.Div([
-    html.H1('所有資料表格'),
+    html.H1('全臺站點資料表格'),
     html.Table([
         html.Thead(
             html.Tr([html.Th(col) for col in data.columns])
