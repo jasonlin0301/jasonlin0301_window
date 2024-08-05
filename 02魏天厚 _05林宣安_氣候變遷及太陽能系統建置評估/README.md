@@ -3,7 +3,11 @@
 ![封面圖](螢幕擷取畫面%202024-07-18%20102238.png)
 
 ### 專案連結:有詳細說明
+
+https://github.com/jasonlin0301/jasonlin0301_window/tree/main/dash_flask
+https://github.com/jasonlin0301/jasonlin0301_window/tree/main/MLproject_Solar_Irradiance
 https://github.com/LanvisWei/MLproject_Solar_Irradiance
+
 
 ### 專案目的
 評估太陽能系統建置可能及實用性
